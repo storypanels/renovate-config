@@ -1,0 +1,12 @@
+/*
+ * Default settings used for onboarding new repos.
+ * Right now this assumes that every repo will be a JS lib
+ */
+
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+
+  extends: [
+    "github>projitect/renovate-config:js-lib.json5",
+  ],
+}

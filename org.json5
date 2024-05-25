@@ -1,0 +1,19 @@
+/*
+ * Default settings for this organization
+ * - Keep issues and PRs organized the same way
+ * - Other settings based on how work is done in this org
+ */
+
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+
+  // Add these labels to all PRs to make them easy to visually separate
+  addLabels: ["dependencies"],
+
+  // Use the CODEOWNERS file to assign reviewers
+  reviewersFromCodeOwners: true,
+  assigneesFromCodeOwners: true,
+
+  // Set the timezone for schedules
+  timezone: "America/Los_Angeles",
+}

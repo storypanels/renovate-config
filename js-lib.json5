@@ -1,0 +1,170 @@
+/*
+ * Default settings for JS apps in this organization
+ * - Sets rules for concurrency, schedule and prioritization
+ * - Sets rules for stability requirements
+ */
+
+/*
+ * NOTE(prCreation), referenced below
+ * ----------------------------------
+ *
+ * Don't create PRs until checks have finished running.
+ *
+ * The ideal situation is:
+ *   - this setting would only apply to the stabilityDays check
+ *   - we could configure CI to only start running when PRs are opened
+ *     (this allows saving in-progress work to a remote branch, but only using CI time once opening a PR)
+ *
+ * However, this is an issue: https://github.com/renovatebot/renovate/issues/7800
+ *
+ * Until that issue is fixed, the solution is:
+ *   - configure CI to build _all_ branches, not just PRs
+ */
+
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+
+  extends: [
+    // Default configuration from Renovate
+    // See https://docs.renovatebot.com/presets-config/#configjs-lib
+    "config:js-lib",
+
+    "github>projitect/renovate-config:org.json5",
+  ],
+
+  // Always run off latest main to ensure CI is run against the latest code
+  // Limit to 1 concurrent PR to avoid re-triggering CI for every rebase
+  rebaseWhen: "behind-base-branch",
+  prConcurrentLimit: 1,
+
+  // Enable lockfile maintenance. The schedule and priority are configured further down
+  lockFileMaintenance: { enabled: true },
+
+  packageRules: [
+    /* ******************************************************
+     * SECTION: automerge, schedule and priority
+     ****************************************************** */
+
+    {
+      // Any plumbing-type update
+      matchUpdateTypes: ["pin", "digest"],
+
+      // Auto-merge these updates
+      automerge: true,
+
+      // Allow them to happen any time
+
+      // These are highest priority because they're the safest auto-merged updates
+      prPriority: 3,
+    },
+
+    {
+      // Any dependency (non-major)
+      matchUpdateTypes: ["minor", "patch"],
+
+      // Auto-merge these updates
+      automerge: true,
+
+      // Limit these updates to happen overnight
+      // They can be run without human intervention, so why waste CI resources during working hours?
+      schedule: ["after 8pm", "before 7am"],
+
+      // These are high priority because they're quite safe auto-merged updates
+      prPriority: 2,
+    },
+
+    {
+      // Dev dependencies (major)
+      matchDepTypes: ["devDependencies"],
+      matchUpdateTypes: ["major"],
+
+      // Auto-merge these updates
+      automerge: true,
+
+      // Limit these updates to happen overnight
+      // They can be run without human intervention, so why waste CI resources during working hours?
+      schedule: ["after 8pm", "before 7am"],
+
+      // These are medium priority because they're nearly-safe auto-merged updates
+      prPriority: 1,
+    },
+
+    {
+      // Dependencies (major)
+      matchDepTypes: ["dependencies"],
+      matchUpdateTypes: ["major"],
+
+      // Do not auto-merge these updates
+      automerge: false,
+
+      // Allow them to happen any time
+
+      // These are low priority because they are not auto-merged.
+      // Since they'll require human approval and we're only allowing 1 PR at a time,
+      // these should not block the overnight updates from auto-merging.
+      // Why -1? This ensures that any other unspecified priority PRs will come first.
+      prPriority: -1,
+    },
+
+    {
+      // Lockfile maintenance
+      matchUpdateTypes: ["lockFileMaintenance"],
+
+      // Auto-merge these updates
+      automerge: true,
+
+      // Limit these updates to happen overnight
+      // They can be run without human intervention, so why waste CI resources during working hours?
+      // However, don't overlap with other types of updates or they may never get prioritized
+      // Run them after the other nightly updates
+      // Run these at most a few times weekly because they can be pretty noisy
+      schedule: [
+        "after 7am and before 9am on monday",
+        "after 7am and before 9am on thursday",
+        "after 7am and before 9am on saturday",
+      ],
+
+      // These are the lowest priority updates,
+      // because if they fail CI they'll be hard to fix
+      prPriority: -2,
+    },
+
+    /* ******************************************************
+     * SECTION: stabilityDays
+     ****************************************************** */
+
+    // Base configuration for stabilityDays
+    {
+      // Any non-plumbing type update
+      matchUpdateTypes: ["major", "minor", "patch"],
+
+      // Since npm packages can be un-published within 24 hours, always wait at least 1 day
+      // Create PRs only after that 1 day has passed
+      stabilityDays: 1,
+      prCreation: "not-pending", // See NOTE(prCreation) above
+
+      // See discussion here: https://github.com/renovatebot/renovate/discussions/15764
+      internalChecksFilter: "strict",
+    },
+
+    {
+      // Dependencies (minor)
+      matchDepTypes: ["dependencies"],
+      matchUpdateTypes: ["minor"],
+
+      // Wait a medium number of days before creating the PRs
+      stabilityDays: 2,
+      prCreation: "not-pending", // See NOTE(prCreation) above
+    },
+
+    {
+      // Dependencies (major)
+      matchDepTypes: ["dependencies"],
+      matchUpdateTypes: ["major"],
+
+      // Wait a good long number of days before creating the PRs
+      stabilityDays: 3,
+      prCreation: "not-pending", // See NOTE(prCreation) above
+    },
+  ],
+}
