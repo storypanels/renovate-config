@@ -3,6 +3,6 @@
 
   extends: [
     // This isn't a JS lib, but this config is still kind of what we want for this repo
-    "github>projitect/renovate-config:js-lib.json5",
+    "github>storypanels/renovate-config:js-lib.json5",
   ],
 }
