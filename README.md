@@ -1,4 +1,4 @@
-@storypanels/renovate-config
+StoryCut/renovate-config
 ============================
 
 Renovate configurations for this organization
