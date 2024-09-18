@@ -1,0 +1,20 @@
+/*
+ * Rules that should apply to both js-app and js-lib
+ */
+
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+
+  packageRules: [
+    {
+      // Effect ecosystem packages should be grouped
+      matchPackageNames: ["/^effect$/", "/^@effect\\//"],
+      groupName: "Effect monorepo",
+    },
+    {
+      // Auth.js (formerly NextAuth) ecosystem packages should be grouped
+      matchPackageNames: ["/^next-auth$/", "/^@auth\\//"],
+      groupName: "Auth.js monorepo",
+    },
+  ],
+}
