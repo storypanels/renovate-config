@@ -9,12 +9,12 @@
     {
       // Effect ecosystem packages should be grouped
       matchPackageNames: ["/^effect$/", "/^@effect\\//"],
-      groupName: "Effect monorepo",
+      groupName: "Effect ecosystem",
     },
     {
       // Auth.js (formerly NextAuth) ecosystem packages should be grouped
       matchPackageNames: ["/^next-auth$/", "/^@auth\\//"],
-      groupName: "Auth.js monorepo",
+      groupName: "Auth.js ecosystem",
     },
   ],
 }
