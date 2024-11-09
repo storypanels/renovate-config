@@ -135,9 +135,6 @@
       // Create PRs only after that 1 day has passed
       stabilityDays: 1,
       prCreation: "not-pending", // See NOTE(prCreation) above
-
-      // See discussion here: https://github.com/renovatebot/renovate/discussions/15764
-      internalChecksFilter: "strict",
     },
 
     {
