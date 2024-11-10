@@ -4,21 +4,6 @@
  * - Sets rules for stability requirements
  */
 
-/*
- * NOTE(prCreation), referenced below
- * ----------------------------------
- * 
- * Make note of how the prCreation option is set to "not-pending" for the minimumReleaseAge checks.
- *
- * The workflow is:
- * - Renovate creates the branch
- * - Renovate adds the renovate/stability-days check (based on the minimumReleaseAge option)
- * - Once that check passes (i.e. is is 'not-pending'), Renovate creates the PR
- * - CI runs against the PR (and is configured not to run until the PR is created)
- * - Renovate auto-merges the PR if it passes CI, or waits for manual approval, etc.
- *
- */
-
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
 
@@ -131,7 +116,7 @@
 
       // Create PRs after at least 3 days has passed, since npm packages can be un-published within 72 hours
       minimumReleaseAge: 3,
-      prCreation: "not-pending", // See NOTE(prCreation) above
+      prCreation: "not-pending", // See NOTE(prCreation)
     },
 
     {
@@ -141,7 +126,7 @@
 
       // Wait a medium number of days before creating the PRs
       minimumReleaseAge: 5,
-      prCreation: "not-pending", // See NOTE(prCreation) above
+      prCreation: "not-pending", // See NOTE(prCreation)
     },
 
     {
@@ -151,7 +136,7 @@
 
       // Wait a good long number of days before creating the PRs
       minimumReleaseAge: 8,
-      prCreation: "not-pending", // See NOTE(prCreation) above
+      prCreation: "not-pending", // See NOTE(prCreation)
     },
   ],
 }

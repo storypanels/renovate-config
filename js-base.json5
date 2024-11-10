@@ -2,6 +2,43 @@
  * Rules that should apply to both js-app and js-lib
  */
 
+ /*
+ * Deploy flow
+ * ----------------------------------
+ * 
+ * The workflow is:
+ * 1. Renovate creates the branch
+ *
+ * 2. Status checks added
+ *    - Vercel deploys preview build (1 status check for preview deploy succes, 1 for preview comments)
+ *    - Renovate waits time based on minimumReleaseAge (1 status check green once time has passed)
+ *
+ * 3. Renovate creates PR after the last pending status check completes (passes or fails)
+ *    - NOTE(prCreation): this is what the prCreation="not-pending" option does. Makes Renovate wait to create its PR
+ *
+ * 4. CI starts running on the PR
+ *
+ * 5. Renovate auto-merges the PR if it passes CI, or waits for manual approval, etc.
+ *
+ * NOTE(buildAllBranches):
+ *   Because of the Vercel green status checks, Renovate thinks that CI has completed,
+ *   and auto-merges immediately before CI has a chance to start running.
+ * 
+ *   That's why we currently have CircleCI configured to build all branches (so that these
+ *   status checks are already started before Renovate has a chance to auto-merge. Renovate will
+ *   see the pending status checks and wait for them to pass before auto-merging).
+ *
+ *   Once our Github branch protection rules get enforced (by upgrading to a paid plan),
+ *   Renovate will be able to see the *expected* CircleCI status checks as pending,
+ *   even if CircleCI hasn't actually started running them yet. It's just that we've configured
+ *   Github to know to expect these status checks from CircleCI.
+ *
+ *   Once that happens, we can set CircleCI back to only building branches once a PR has been created.
+ *   This will save a bunch of CI time, since we won't be building every branch on every push.
+ *
+ *   TL;DR; once we upgrade to a paid Github plan, we set CircleCI to only build PRs.
+ */
+
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
 
