@@ -8,7 +8,7 @@
  * NOTE(prCreation), referenced below
  * ----------------------------------
  * 
- * Make note of how the prCreation option is set to "not-pending" for the stabilityDays checks.
+ * Make note of how the prCreation option is set to "not-pending" for the minimumReleaseAge checks.
  *
  * The workflow is:
  * - Renovate creates the branch
@@ -121,17 +121,16 @@
     },
 
     /* ******************************************************
-     * SECTION: stabilityDays
+     * SECTION: minimumReleaseAge
      ****************************************************** */
 
-    // Base configuration for stabilityDays
+    // Base configuration for minimumReleaseAge
     {
       // Any non-plumbing type update
       matchUpdateTypes: ["major", "minor", "patch"],
 
-      // Since npm packages can be un-published within 24 hours, always wait at least 1 day
-      // Create PRs only after that 1 day has passed
-      stabilityDays: 1,
+      // Create PRs after at least 3 days has passed, since npm packages can be un-published within 72 hours
+      minimumReleaseAge: 3,
       prCreation: "not-pending", // See NOTE(prCreation) above
     },
 
@@ -141,7 +140,7 @@
       matchUpdateTypes: ["minor"],
 
       // Wait a medium number of days before creating the PRs
-      stabilityDays: 2,
+      minimumReleaseAge: 5,
       prCreation: "not-pending", // See NOTE(prCreation) above
     },
 
@@ -151,7 +150,7 @@
       matchUpdateTypes: ["major"],
 
       // Wait a good long number of days before creating the PRs
-      stabilityDays: 3,
+      minimumReleaseAge: 8,
       prCreation: "not-pending", // See NOTE(prCreation) above
     },
   ],
