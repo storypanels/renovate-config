@@ -7,18 +7,16 @@
 /*
  * NOTE(prCreation), referenced below
  * ----------------------------------
+ * 
+ * Make note of how the prCreation option is set to "not-pending" for the stabilityDays checks.
  *
- * Don't create PRs until checks have finished running.
+ * The workflow is:
+ * - Renovate creates the branch
+ * - Renovate adds the renovate/stability-days check (based on the minimumReleaseAge option)
+ * - Once that check passes (i.e. is is 'not-pending'), Renovate creates the PR
+ * - CI runs against the PR (and is configured not to run until the PR is created)
+ * - Renovate auto-merges the PR if it passes CI, or waits for manual approval, etc.
  *
- * The ideal situation is:
- *   - this setting would only apply to the stabilityDays check
- *   - we could configure CI to only start running when PRs are opened
- *     (this allows saving in-progress work to a remote branch, but only using CI time once opening a PR)
- *
- * However, this is an issue: https://github.com/renovatebot/renovate/issues/7800
- *
- * Until that issue is fixed, the solution is:
- *   - configure CI to build _all_ branches, not just PRs
  */
 
 {
