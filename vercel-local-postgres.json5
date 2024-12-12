@@ -1,0 +1,14 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+
+  packageRules: [
+    # Disable updates to the postgres image, because we want to manually
+    # control this to always match the version Vercel uses in production.
+    # https://vercel.com/docs/storage/vercel-postgres#existing-postgres-stores
+    {
+      "matchPackageNames": ["/postgres/"],
+      "matchManagers": ["docker-compose"],
+      "enabled": false
+    }
+  ],
+}
